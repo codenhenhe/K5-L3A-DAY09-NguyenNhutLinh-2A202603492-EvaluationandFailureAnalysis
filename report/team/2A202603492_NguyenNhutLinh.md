@@ -1,11 +1,11 @@
-# Báo cáo cá nhân — Nguyễn Nhựt Linh
+# Báo cáo cá nhân — 2A202603492_NguyenNhutLinh
 
 ## 1. Thông tin thành viên
 
 - Họ tên: Nguyễn Nhựt Linh
 - MSSV: 2A202603492
 - Email: 26ai.linhnn2@vinuni.edu.vn
-- GitHub: https://github.com/codenhenhe
+- GitHub: [codenhenhe](https://github.com/codenhenhe)
 
 ## 2. Phần việc phụ trách
 
