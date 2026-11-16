@@ -46,6 +46,9 @@ Test sử dụng SQLite fixture thật, runtime thật và MockLLM thật của 
 - Link commit: https://github.com/duyanhtran2005/K5-L3A-DAY08-Nhom4Nam-FromWorkflowsToAgents/commit/bbfec12cdc0de700d16fedbbef381fd47df18992.
 - Commit gồm `src/lab8/shapes/single.py` và `src/tests/test_single_agent.py`.
 - Tác giả Git: `trngtnh <26ai.tinhtdt@vinuni.edu.vn>`.
+- Commit cập nhật đóng góp trong TEAM.md: `b38851b0f63721571aa8d22c1d300f99d64a5190`.
+- Link commit TEAM.md: https://github.com/duyanhtran2005/K5-L3A-DAY08-Nhom4Nam-FromWorkflowsToAgents/commit/b38851b0f63721571aa8d22c1d300f99d64a5190.
+- `TEAM.md` và báo cáo cá nhân cùng tham chiếu commit code/test `bbfec12` và commit đóng góp `b38851b`; commit đóng góp bổ sung thông tin thành viên, phạm vi Single agent và bằng chứng test.
 
 ## 4. Bằng chứng
 
@@ -64,9 +67,9 @@ Kiểm thử thực tế trên Windows, Python 3.11.9, pytest 8.4.2, PyYAML 6.0.
 
 Lưu ý khi chạy lại: bộ lọc ngắn `-k single` còn chọn tên test `test_public_single_run_cases` của các shape khác. Cần dùng bộ lọc đầy đủ ở bảng để chỉ chạy shape được phân công.
 
-### 4.2. Kiểm tra sau khi pull main mới nhất
+### 4.2. Kiểm tra tích hợp Workflow trước đây
 
-Đã pull và merge commit `c81c2d41e8c8b45aadf2b83b3946e35e4fed49f3` từ `main` của repo nhóm, gồm phần Workflow và test của Nguyễn Nhựt Linh. Commit Single agent nêu ở mục 3.4 được giữ nguyên hash. `TEAM.md` được khôi phục đúng bản gốc, chưa điền thông tin.
+Đã pull và merge commit `c81c2d41e8c8b45aadf2b83b3946e35e4fed49f3` từ `main` của repo nhóm, gồm phần Workflow và test của Nguyễn Nhựt Linh. Commit Single agent nêu ở mục 3.4 được giữ nguyên hash.
 
 | Lệnh | Kết quả thực tế sau tích hợp |
 | --- | --- |
@@ -74,13 +77,24 @@ Lưu ý khi chạy lại: bộ lọc ngắn `-k single` còn chọn tên test `t
 | `python -m pytest -q -m student -o addopts= -k "not orchestrator and not swarm"` | 124 passed, 191 deselected; gồm 62 test Single agent và 62 test Workflow |
 | `python -m lab8.smoke` | `lab8.smoke pass`; trace clean |
 
-Chưa có số liệu hidden hoặc benchmark bốn shape cho bản tích hợp này. Orchestrator, ADR và báo cáo chung vẫn thuộc phần tích hợp của nhóm; kết quả trên chỉ xác nhận phạm vi kiểm thử đã ghi.
+### 4.3. Kiểm tra sau khi cập nhật main và thông tin đóng góp
+
+Đã pull main tại commit `be8f47a4f991b2ba9c19965b9978ab8734401202`, có đủ Workflow, Single agent và Orchestrator. Sau đó cập nhật dòng thành viên, bảng đóng góp và mục cá nhân trong `TEAM.md`; giữ nguyên thông tin của các thành viên khác.
+
+| Lệnh | Kết quả thực tế |
+| --- | --- |
+| `python -m pytest -q` | 68 passed, 248 deselected |
+| `python -m pytest -q -m student -o addopts=` | 248 passed, 68 deselected; đủ bốn shape |
+
+Các thay đổi của lần cập nhật này chỉ nằm trong tài liệu đóng góp và báo cáo cá nhân. Chưa có số liệu hidden hoặc benchmark bốn shape trong phạm vi báo cáo này; kết quả trên phản ánh đúng các lệnh kiểm thử đã chạy.
 
 ## 5. Công cụ AI đã dùng
 
-OpenAI Codex được dùng để đọc yêu cầu Markdown, đối chiếu phần triển khai với starter và tài liệu kiến trúc, hỗ trợ rà soát quyền tool và nhánh hết bước, viết test, chạy lệnh kiểm thử và soạn báo cáo này. Kết quả trong mục 4 lấy từ lệnh chạy thực tế trong phiên làm việc, không phải số liệu ước lượng.
+Tôi phụ trách phần Single agent, gồm luồng xử lý claim, giới hạn vòng ReAct, quyền tool đọc và ranh giới ghi refund ở host. OpenAI Codex được sử dụng để tham khảo yêu cầu kỹ thuật và hỗ trợ hoàn thiện phần việc này.
 
-Việc kiểm chứng tự động dùng assertion về giới hạn bước, quyền tool, SQLite ledger/audit và nội dung trace. Thành viên cần đọc diff, chạy lại các lệnh và tự giải thích các quyết định kỹ thuật khi nộp bài; báo cáo này không ghi nhận rằng thành viên đã hoàn thành bước kiểm chứng thủ công đó.
+Phạm vi hỗ trợ của AI gồm đối chiếu tài liệu, rà soát và chỉnh hai chi tiết về allowlist tool đọc và nhánh hết bước; gợi ý, viết test case cho các tình huống biên; chạy kiểm thử và biên tập cách trình bày báo cáo. Các quyết định và hành vi của phần Single agent được mô tả cụ thể ở mục 3.
+
+Các đề xuất được kiểm chứng bằng test thực chạy: số bước/model call, quyền gọi tool, SQLite ledger/audit và trace. Số liệu ở mục 4 được lấy từ output kiểm thử thực tế. Khi trình bày bài, các điểm cần giải thích là lý do giới hạn 8 bước, việc truyền quote đầy đủ và quyền ghi refund thuộc host.
 
 ## 6. Tự đánh giá
 

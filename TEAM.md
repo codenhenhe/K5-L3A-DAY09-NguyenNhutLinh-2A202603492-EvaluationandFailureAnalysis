@@ -22,7 +22,7 @@
 | --- | --- | --- | --- |
 | Trần Anh Duy | Nhóm trưởng; tích hợp, benchmark và báo cáo | [điền hash sau khi Duy commit] | Thêm `src/tests/test_team_integration.py`: ba shape thống nhất kết quả trên C-001 và C-002; 2 passed. |
 | Nguyễn Nhựt Linh | Workflow, luật nghiệp vụ | `c81c2d4` | Thêm `src/tests/test_workflow.py`; kiểm tra quote theo order/policy và resume với quote đầy đủ. Test chung với Single: 13 passed. |
-| Trần Dương Trung Tính | Single agent: luồng ReAct, quyền tool và nhánh trả kết quả sớm | `bbfec12` (code/test) | Thêm `src/tests/test_single_agent.py`: 9 trường hợp kiểm tra giới hạn 8 bước, tool chỉ đọc, tool bị cấm và trace ở nhánh trả sớm. Public Single agent: 62 passed. |
+| Trần Dương Trung Tính | Single agent: luồng ReAct, quyền tool và nhánh trả kết quả sớm | `bbfec12` (code/test); `b38851b` (TEAM) | Thêm `src/tests/test_single_agent.py`: 9 trường hợp kiểm tra giới hạn 8 bước, tool chỉ đọc, tool bị cấm và trace ở nhánh trả sớm. Public Single agent: 62 passed. |
 | Trương Lợi Vĩ | Orchestrator, handoff và trace | `0d0e722` | Sửa `src/tests/test_handoff_secret.py` để kiểm quyền tool đọc và handoff an toàn; test chung liên quan ba shape: 17 passed. |
 
 ## Cá nhân
@@ -102,6 +102,7 @@ Sao chép mục dưới đây cho từng thành viên.
 ### Bằng chứng
 
 - Commit code/test: `bbfec12cdc0de700d16fedbbef381fd47df18992` — `feat(single): implement bounded read-only ReAct agent`.
+- Commit cập nhật đóng góp trong TEAM.md: [b38851b](https://github.com/duyanhtran2005/K5-L3A-DAY08-Nhom4Nam-FromWorkflowsToAgents/commit/b38851b0f63721571aa8d22c1d300f99d64a5190).
 - Test riêng Single agent: **9 passed**; ma trận public của Single agent: **62 passed**.
 - Kiểm tra sau khi pull main `be8f47a4f991b2ba9c19965b9978ab8734401202`: cổng host **68 passed, 248 deselected**; ma trận student đủ bốn shape **248 passed, 68 deselected**.
 - Báo cáo cá nhân: [2A202603488_TranDuongTrungTinh.md](report/team/2A202603488_TranDuongTrungTinh.md).
