@@ -17,7 +17,7 @@ Shape A (Workflow) trong [workflow.py](../../src/lab8/shapes/workflow.py). Bản
 - Dùng `compute_compensation` để tính quote từ dữ liệu đơn hàng và policy có `is_current` với ngày hiệu lực không muộn hơn ngày mô phỏng. Workflow trả `needs_info` khi thiếu mã đơn, `escalated` khi đơn không tồn tại hoặc ngoài phạm vi, và `denied` khi quote bằng 0.
 - Truyền toàn bộ số tiền từ quote vào `durability.issue_refund`. Host kiểm approval thuộc claim, tính phần đã hoàn trên đơn và chống ghi trùng. Workflow giữ quote ở `proposal_amount`, trả `resolved` nếu host chấp nhận và `denied` nếu host từ chối. Xung đột số tiền khi gọi lại trả `failed` và giữ refund đã ghi.
 - Chuyển `crash_at` vào host và để `InjectedCrash` truyền tới trình kiểm thử. Khi chạy lại trên cùng cơ sở dữ liệu, host dùng ledger để nhận diện giao dịch đã ghi dù checkpoint chưa có.
-- Các thay đổi được bàn giao ở local. Chưa có commit hash cho phần này.
+- Commit chính của phần Workflow là `055b411698e7534825736c58ac7ccd4388b91faa`.
 
 ## 4. Bằng chứng
 
