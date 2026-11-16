@@ -50,3 +50,36 @@ Sao chép mục dưới đây cho từng thành viên.
 ### Bằng chứng
 
 -
+
+
+## 2A202603441_TruongLoiVi
+
+### Phần việc phụ trách
+
+- Phụ trách Orchestrator, cơ chế handoff, trace và kiểm thử bảo mật.
+- Rà soát và hoàn thiện luồng điều phối giữa Orchestrator và các investigator.
+- Kiểm tra giới hạn dữ liệu được truyền qua handoff và bảo đảm investigator chỉ có quyền thực hiện các công cụ đọc dữ liệu được cho phép.
+
+### Đóng góp cụ thể
+
+- Hoàn thiện `src/lab8/shapes/orchestrator.py`, triển khai cơ chế điều phối giữa Orchestrator và các investigator.
+- Rà soát cơ chế handoff, kiểm tra allowlist và giới hạn những trường dữ liệu được truyền giữa các thành phần.
+- Rà soát trace nhằm hạn chế thông tin nhạy cảm xuất hiện trong dữ liệu ghi log.
+- Kiểm tra quyền read-only của investigator, bảo đảm investigator không thể tự ý thực hiện các thao tác ghi dữ liệu như `issue_refund`.
+- Bổ sung và chỉnh sửa `src/tests/test_handoff_secret.py` để kiểm tra việc loại bỏ secret, giới hạn quyền tool và từ chối handoff giả mạo có chứa quyền ghi dữ liệu.
+- Thực hiện kiểm thử các thành phần liên quan và phối hợp kiểm tra tính nhất quán giữa ba shape.
+
+### Bằng chứng
+
+- Commit chính: `0d0e722` — `feat(orchestrator): implement read-only investigator coordination`.
+- Branch: `loivi/orchestrator-security`.
+- File đã thay đổi:
+  - `src/lab8/shapes/orchestrator.py`
+  - `src/tests/test_handoff_secret.py`
+  - `report/team/2A202603441_TruongLoiVi.md`
+- Test riêng `src/tests/test_handoff_secret.py`: **4 passed**.
+- Test suite `src/tests/`: **68 passed, 248 deselected**.
+- Test student: **248 passed, 68 deselected**.
+- Test chung liên quan ba shape: **17 passed**.
+- Repository: https://github.com/duyanhtran2005/K5-L3A-DAY08-Nhom4Nam-FromWorkflowsToAgents
+
