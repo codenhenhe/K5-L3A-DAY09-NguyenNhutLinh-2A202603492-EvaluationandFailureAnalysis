@@ -5,7 +5,7 @@
 - Tên nhóm: Nhom4Nam
 - Lớp: L3A
 - Repo nhóm: K5-L3A-DAY08-Nhom4Nam-FromWorkflowsToAgents
-- URL repo, nhánh nộp, commit chốt: https://github.com/duyanhtran2005/K5-L3A-DAY08-Nhom4Nam-FromWorkflowsToAgents.git · main · [điền sau khi chốt]
+- URL repo, nhánh nộp, commit chốt: https://github.com/duyanhtran2005/K5-L3A-DAY08-Nhom4Nam-FromWorkflowsToAgents.git · main · ecfe8a9
 
 ## Thành viên
 
@@ -20,7 +20,7 @@
 
 | Người | Vai | Commit | Test đã thêm hoặc sửa |
 | --- | --- | --- | --- |
-| Trần Anh Duy | Nhóm trưởng; tích hợp, benchmark, tự kiểm hidden và báo cáo | [điền hash sau khi Duy commit] | Thêm `src/tests/test_team_integration.py`: ba shape thống nhất kết quả trên C-001 và C-002; 2 passed. |
+| Trần Anh Duy | Nhóm trưởng; tích hợp, benchmark, tự kiểm hidden và báo cáo | `4b05900` | Thêm `src/tests/test_team_integration.py`: ba shape thống nhất kết quả trên C-001 và C-002; 2 passed. |
 | Nguyễn Nhựt Linh | Workflow, luật nghiệp vụ | `c81c2d4` | Thêm `src/tests/test_workflow.py`; kiểm tra quote theo order/policy và resume với quote đầy đủ. Test chung với Single: 13 passed. |
 | Trần Dương Trung Tính | Single agent: luồng ReAct, quyền tool và nhánh trả kết quả sớm | `bbfec12` (code/test); `b38851b` (TEAM) | Thêm `src/tests/test_single_agent.py`: 9 trường hợp kiểm tra giới hạn 8 bước, tool chỉ đọc, tool bị cấm và trace ở nhánh trả sớm. Public Single agent: 62 passed. |
 | Trương Lợi Vĩ | Orchestrator, handoff và trace | `0d0e722` | Sửa `src/tests/test_handoff_secret.py` để kiểm quyền tool đọc và handoff an toàn; test chung liên quan ba shape: 17 passed. |
@@ -54,7 +54,7 @@ Sao chép mục dưới đây cho từng thành viên.
 - Test tích hợp: `python -m pytest -q tests/test_team_integration.py` → **2 passed**; test thường **70 passed**, student matrix **248 passed**.
 - `src/reports/benchmark.json`: workflow/single/orchestrator **70/70** trial, swarm **69/70**; `src/reports/crash.json`: **20/20**.
 - `src/reports/hidden_selfcheck.json`: **200 trial/shape**, không có lỗi chạy, lỗi trace hoặc `leak_suspect`; dữ liệu không nhãn nên không tính pass rate hidden.
-- Commit phần tích hợp và báo cáo: [điền sau khi commit].
+- Commit phần tích hợp và báo cáo: `4b05900`.
 
 ## 2A202603441_TruongLoiVi
 

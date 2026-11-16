@@ -3,7 +3,7 @@
 Quyết định của nhóm trên cùng public corpus và bộ seed; các dòng nhãn được giữ để công cụ kiểm tra bài nộp đọc được.
 
 - Shape chọn: workflow
-- Commit hash: [điền hash sau khi commit code và reports]
+- Commit hash: ecfe8a9
 - Run id dẫn chứng: R-workflow-C-001-s11
 - Pass rate / pass^5 / seed min-max / variance: 1.0000 / 1.0000 / 1.000–1.000 / 0.000000
 - Cost per success (mô phỏng, VND): 34.29

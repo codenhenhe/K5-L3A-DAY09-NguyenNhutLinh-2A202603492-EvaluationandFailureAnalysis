@@ -6,7 +6,7 @@ Số liệu lấy từ các file do công cụ lab tạo trong `src/reports/`.
 
 - Tên nhóm: Nhom4Nam
 - Thành viên: xem `TEAM.md`
-- Commit chốt (trùng `report/team/decision_adr.md`): [điền sau khi commit code và reports]
+- Commit chốt (trùng `report/team/decision_adr.md`): `ecfe8a9`
 
 ## 2. Mục tiêu và cách tiếp cận
 
