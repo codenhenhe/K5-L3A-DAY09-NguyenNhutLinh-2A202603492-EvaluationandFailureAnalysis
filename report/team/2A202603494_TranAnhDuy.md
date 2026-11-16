@@ -16,7 +16,7 @@ Phụ trách trưởng nhóm và tích hợp ba kiến trúc: workflow, single a
 - Điều phối phân công, tổng hợp phần việc của các thành viên vào repo nhóm và kiểm tra tích hợp sau mỗi lần cập nhật. Sau khi ghép đủ ba shape, test thường đạt `70 passed`, student matrix đạt `248 passed`.
 - Thêm `src/tests/test_team_integration.py`: chạy workflow, single và orchestrator trên cùng C-001/seed 11 và C-002/seed 55; đối chiếu evaluator, trace `run_id` và kết quả giữa ba shape. Test đạt `2 passed`.
 - Chạy lại crash suite `20/20` và benchmark bốn shape × 14 claim × 5 seed trên repo nhóm. Workflow, Single và Orchestrator đạt 70/70; Swarm đạt 69/70. Tổng hợp số liệu vào báo cáo nhóm, ADR và research card MAST.
-- Tạo bản `student_drop/` không nhãn từ pack local và chạy tự kiểm ba shape × 40 claim × 5 seed. Cả 600 trial có trace kiểm được, không có `error` hoặc `leak_suspect`; không suy diễn pass rate hidden từ kết quả không nhãn.
+- Dùng đúng hai file không nhãn trong `instructor/student_drop/` để tự kiểm ba shape × 40 claim × 5 seed. Cả 600 trial có trace kiểm được, không có `error` hoặc `leak_suspect`; không dùng nhãn giảng viên và không suy diễn pass rate hidden từ kết quả không nhãn.
 - Commit chính: `4b05900` (test, kết quả và báo cáo); `ecfe8a9` (tích hợp cập nhật thành viên).
 
 ## 4. Bằng chứng
