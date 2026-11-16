@@ -11,16 +11,16 @@
 
 | STT | Họ tên | MSSV | Email | GitHub | Vai trò |
 | --: | ------ | ---- | ----- | ------ | ------- |
-| 1 | Trần Anh Duy | 2A202603494 | | https://github.com/duyanhtran2005 | Nhóm trưởng; tích hợp, benchmark, báo cáo |
+| 1 | Trần Anh Duy | 2A202603494 | 26ai.duyta@vinuni.edu.vn | https://github.com/duyanhtran2005 | Nhóm trưởng; tích hợp, benchmark, tự kiểm hidden, báo cáo |
 | 2 | Nguyễn Nhựt Linh | 2A202603492 | 26ai.linhnn2@vinuni.edu.vn | https://github.com/codenhenhe | Workflow, luật nghiệp vụ và test |
 | 3 | Trần Dương Trung Tính | 2A202603488 | 26ai.tinhtdt@vinuni.edu.vn | https://github.com/trngtnh | Single agent, giới hạn vòng ReAct, quyền tool đọc và test |
-| 4 | Trương Lợi Vĩ | 2A202603441 | | https://github.com/ViTL-AI26 | Orchestrator, handoff, trace và test |
+| 4 | Trương Lợi Vĩ | 2A202603441 | 26ai.vitl@vinuni.edu.vn | https://github.com/ViTL-AI26 | Orchestrator, handoff, trace và test |
 
 ## Bảng đóng góp
 
 | Người | Vai | Commit | Test đã thêm hoặc sửa |
 | --- | --- | --- | --- |
-| Trần Anh Duy | Nhóm trưởng; tích hợp, benchmark và báo cáo | [điền hash sau khi Duy commit] | Thêm `src/tests/test_team_integration.py`: ba shape thống nhất kết quả trên C-001 và C-002; 2 passed. |
+| Trần Anh Duy | Nhóm trưởng; tích hợp, benchmark, tự kiểm hidden và báo cáo | [điền hash sau khi Duy commit] | Thêm `src/tests/test_team_integration.py`: ba shape thống nhất kết quả trên C-001 và C-002; 2 passed. |
 | Nguyễn Nhựt Linh | Workflow, luật nghiệp vụ | `c81c2d4` | Thêm `src/tests/test_workflow.py`; kiểm tra quote theo order/policy và resume với quote đầy đủ. Test chung với Single: 13 passed. |
 | Trần Dương Trung Tính | Single agent: luồng ReAct, quyền tool và nhánh trả kết quả sớm | `bbfec12` (code/test); `b38851b` (TEAM) | Thêm `src/tests/test_single_agent.py`: 9 trường hợp kiểm tra giới hạn 8 bước, tool chỉ đọc, tool bị cấm và trace ở nhánh trả sớm. Public Single agent: 62 passed. |
 | Trương Lợi Vĩ | Orchestrator, handoff và trace | `0d0e722` | Sửa `src/tests/test_handoff_secret.py` để kiểm quyền tool đọc và handoff an toàn; test chung liên quan ba shape: 17 passed. |
@@ -41,15 +41,20 @@ Sao chép mục dưới đây cho từng thành viên.
 
 ### Phần việc phụ trách
 
-- Điều phối nhóm, tích hợp ba kiến trúc, kiểm thử chung, benchmark và tổng hợp báo cáo.
+- Điều phối nhóm; tích hợp workflow, single agent và orchestrator; chạy kiểm thử, benchmark public, crash suite và tự kiểm trên dữ liệu không nhãn; tổng hợp báo cáo.
 
 ### Đóng góp cụ thể
 
--
+- Điều phối và tích hợp phần việc của bốn thành viên trên repo nhóm; kiểm tra lại toàn bộ test sau tích hợp.
+- Bổ sung test đối chiếu kết quả và trace của ba shape trên cùng claim/seed; chạy benchmark public, crash suite và tự kiểm trên dữ liệu không nhãn.
+- Tổng hợp số liệu, lựa chọn kiến trúc và giới hạn của kết luận trong báo cáo nhóm, ADR và research card MAST.
 
 ### Bằng chứng
 
--
+- Test tích hợp: `python -m pytest -q tests/test_team_integration.py` → **2 passed**; test thường **70 passed**, student matrix **248 passed**.
+- `src/reports/benchmark.json`: workflow/single/orchestrator **70/70** trial, swarm **69/70**; `src/reports/crash.json`: **20/20**.
+- `src/reports/hidden_selfcheck.json`: **200 trial/shape**, không có lỗi chạy, lỗi trace hoặc `leak_suspect`; dữ liệu không nhãn nên không tính pass rate hidden.
+- Commit phần tích hợp và báo cáo: [điền sau khi commit].
 
 ## 2A202603441_TruongLoiVi
 
