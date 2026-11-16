@@ -13,7 +13,7 @@
 | --: | ------ | ---- | ----- | ------ | ------- |
 | 1 | Trần Anh Duy | 2A202603494 | | https://github.com/duyanhtran2005 | Nhóm trưởng; tích hợp, benchmark, báo cáo |
 | 2 | Nguyễn Nhựt Linh | 2A202603492 | | https://github.com/codenhenhe | Workflow, luật nghiệp vụ và test |
-| 3 | Trần Dương Trung Tính | 2A202603488 | | https://github.com/trngtnh | Single agent, vòng ReAct và test |
+| 3 | Trần Dương Trung Tính | 2A202603488 | 26ai.tinhtdt@vinuni.edu.vn | https://github.com/trngtnh | Single agent, giới hạn vòng ReAct, quyền tool đọc và test |
 | 4 | Trương Lợi Vĩ | 2A202603441 | | https://github.com/ViTL-AI26 | Orchestrator, handoff, trace và test |
 
 ## Bảng đóng góp
@@ -22,7 +22,7 @@
 | --- | --- | --- | --- |
 | Trần Anh Duy | Nhóm trưởng; tích hợp, benchmark và báo cáo | [điền hash sau khi Duy commit] | Thêm `src/tests/test_team_integration.py`: ba shape thống nhất kết quả trên C-001 và C-002; 2 passed. |
 | Nguyễn Nhựt Linh | Workflow, luật nghiệp vụ | `c81c2d4` | Thêm `src/tests/test_workflow.py`; kiểm tra quote theo order/policy và resume với quote đầy đủ. Test chung với Single: 13 passed. |
-| Trần Dương Trung Tính | Single agent, vòng ReAct | `bbfec12` | Thêm `src/tests/test_single_agent.py`; kiểm tra giới hạn 8 bước, quyền tool đọc và trace ở nhánh return sớm. Test chung với Workflow: 13 passed. |
+| Trần Dương Trung Tính | Single agent: luồng ReAct, quyền tool và nhánh trả kết quả sớm | `bbfec12` (code/test) | Thêm `src/tests/test_single_agent.py`: 9 trường hợp kiểm tra giới hạn 8 bước, tool chỉ đọc, tool bị cấm và trace ở nhánh trả sớm. Public Single agent: 62 passed. |
 | Trương Lợi Vĩ | Orchestrator, handoff và trace | `0d0e722` | Sửa `src/tests/test_handoff_secret.py` để kiểm quyền tool đọc và handoff an toàn; test chung liên quan ba shape: 17 passed. |
 
 ## Cá nhân
@@ -83,3 +83,25 @@ Sao chép mục dưới đây cho từng thành viên.
 - Test chung liên quan ba shape: **17 passed**.
 - Repository: https://github.com/duyanhtran2005/K5-L3A-DAY08-Nhom4Nam-FromWorkflowsToAgents
 
+## 2A202603488_TranDuongTrungTinh
+
+### Phần việc phụ trách
+
+- Phụ trách Single agent (shape B) tại `src/lab8/shapes/single.py` theo `docs/architecture.md` và contract của lab.
+- Hoàn thiện luồng xử lý claim trong giới hạn ReAct; phân tách quyền đọc của agent với quyền ghi refund của host.
+- Bổ sung test cho giới hạn bước, quyền tool và các nhánh trả kết quả sớm; lập báo cáo cá nhân.
+
+### Đóng góp cụ thể
+
+- Triển khai luồng đọc claim, kiểm tra order theo principal, đọc lịch sử refund và tính quote bằng `compute_compensation`.
+- Giới hạn vòng ReAct ở 8 bước; bật `worker=True` để áp dụng allowlist tool đọc. Khi hết bước, trả `failed/step_cap`, ghi trace và dừng gọi model.
+- Giao host gọi `issue_refund` sau vòng ReAct; truyền quote đầy đủ và `crash_at` để host kiểm tra approval, cap, idempotency và phục hồi sau crash.
+- Thêm `src/tests/test_single_agent.py`, gồm 4 hàm test với 9 trường hợp: lặp đến giới hạn bước, đọc trong ReAct/ghi ở host, từ chối tool bị cấm và trả kết quả sớm có trace hợp lệ.
+- Đồng bộ thông tin, bằng chứng kiểm thử và commit trong báo cáo cá nhân.
+
+### Bằng chứng
+
+- Commit code/test: `bbfec12cdc0de700d16fedbbef381fd47df18992` — `feat(single): implement bounded read-only ReAct agent`.
+- Test riêng Single agent: **9 passed**; ma trận public của Single agent: **62 passed**.
+- Kiểm tra sau khi pull main `be8f47a4f991b2ba9c19965b9978ab8734401202`: cổng host **68 passed, 248 deselected**; ma trận student đủ bốn shape **248 passed, 68 deselected**.
+- Báo cáo cá nhân: [2A202603488_TranDuongTrungTinh.md](report/team/2A202603488_TranDuongTrungTinh.md).
