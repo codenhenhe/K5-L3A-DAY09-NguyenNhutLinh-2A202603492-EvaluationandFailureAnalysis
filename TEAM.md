@@ -11,7 +11,7 @@
 
 | STT | Họ tên | MSSV | Email | GitHub | Vai trò |
 | --: | ------ | ---- | ----- | ------ | ------- |
-| 1 | Trần Anh Duy | 2A202603494 | | https://github.com/duyanhtran2005 | Nhóm trưởng; tích hợp, benchmark, báo cáo |
+| 1 | Trần Anh Duy | 2A202603494 | 26ai.duyta@vinuni.edu.vn | https://github.com/duyanhtran2005 | Nhóm trưởng; tích hợp, benchmark, báo cáo |
 | 2 | Nguyễn Nhựt Linh | 2A202603492 | 26ai.linhnn2@vinuni.edu.vn | https://github.com/codenhenhe | Workflow, luật nghiệp vụ và test |
 | 3 | Trần Dương Trung Tính | 2A202603488 | 26ai.tinhtdt@vinuni.edu.vn | https://github.com/trngtnh | Single agent, giới hạn vòng ReAct, quyền tool đọc và test |
 | 4 | Trương Lợi Vĩ | 2A202603441 | | https://github.com/ViTL-AI26 | Orchestrator, handoff, trace và test |
