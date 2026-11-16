@@ -2,10 +2,15 @@ import pytest
 
 from lab8.db import connect
 from lab8.handoff import HandoffError, make_handoff, sanitize
-from lab8.runtime import ToolRejected, dispatch, run_react
+
 from lab8.schemas import Budget
 from lab8.tools import get_claim_view
-
+from lab8.runtime import (
+    ToolRejected,
+    dispatch,
+    run_react,
+    run_readonly_investigators,
+)
 
 def test_allowlist_drops_parent_secret_and_headers():
     payload = {
@@ -62,3 +67,23 @@ def test_claim_view_and_react_observation_omit_secret(public_db):
     conn.close()
     assert outcome["stopped"] == "final"
     assert "CANARY_SECRET_" not in str(outcome)
+
+
+def test_readonly_investigators_reject_forged_write_tool(public_db):
+    conn = connect(public_db)
+    budget = Budget()
+
+    forged_handoff = {
+        "claim_id": "C-010",
+        "allowed_tools": ["issue_refund"],
+    }
+
+    with pytest.raises(ToolRejected):
+        run_readonly_investigators(
+            conn,
+            budget,
+            forged_handoff,
+            principal_id="P-100",
+        )
+
+    conn.close()
