@@ -12,7 +12,7 @@
 | STT | Họ tên | MSSV | Email | GitHub | Vai trò |
 | --: | ------ | ---- | ----- | ------ | ------- |
 | 1 | Trần Anh Duy | 2A202603494 | | https://github.com/duyanhtran2005 | Nhóm trưởng; tích hợp, benchmark, báo cáo |
-| 2 | Nguyễn Nhựt Linh | 2A202603492 | | https://github.com/codenhenhe | Workflow, luật nghiệp vụ và test |
+| 2 | Nguyễn Nhựt Linh | 2A202603492 | 26ai.linhnn2@vinuni.edu.vn | https://github.com/codenhenhe | Workflow, luật nghiệp vụ và test |
 | 3 | Trần Dương Trung Tính | 2A202603488 | 26ai.tinhtdt@vinuni.edu.vn | https://github.com/trngtnh | Single agent, giới hạn vòng ReAct, quyền tool đọc và test |
 | 4 | Trương Lợi Vĩ | 2A202603441 | | https://github.com/ViTL-AI26 | Orchestrator, handoff, trace và test |
 
@@ -50,7 +50,6 @@ Sao chép mục dưới đây cho từng thành viên.
 ### Bằng chứng
 
 -
-
 
 ## 2A202603441_TruongLoiVi
 
@@ -106,3 +105,21 @@ Sao chép mục dưới đây cho từng thành viên.
 - Test riêng Single agent: **9 passed**; ma trận public của Single agent: **62 passed**.
 - Kiểm tra sau khi pull main `be8f47a4f991b2ba9c19965b9978ab8734401202`: cổng host **68 passed, 248 deselected**; ma trận student đủ bốn shape **248 passed, 68 deselected**.
 - Báo cáo cá nhân: [2A202603488_TranDuongTrungTinh.md](report/team/2A202603488_TranDuongTrungTinh.md).
+
+## 2A202603492_NguyenNhutLinh
+
+### Phần việc phụ trách
+
+- Phụ trách Shape A (Workflow), gồm đọc claim và đơn hàng, áp dụng policy có hiệu lực, tính bồi thường và chuyển yêu cầu ghi refund qua host.
+
+### Đóng góp cụ thể
+
+- Hoàn thiện `src/lab8/shapes/workflow.py` từ bản tham chiếu của Trương Lợi Vĩ. Workflow dùng dữ liệu đơn hàng trong phạm vi của principal để tính quote, kể cả khi nội dung ticket ghi số ngày trễ khác.
+- Truyền nguyên số tiền trong quote cho `issue_refund`. Host kiểm approval của claim, tính phần đã hoàn trên đơn và chống ghi trùng. Workflow chuyển tiếp `crash_at` để kiểm tra khả năng phục hồi khi chạy lại trên cùng cơ sở dữ liệu.
+- Thêm `src/tests/test_workflow.py` để kiểm tra policy chưa có hiệu lực trên C-002 và việc dùng quote đầy đủ khi phục hồi sau cả ba điểm crash trên C-014. Với quote 150.000 VND và khoản đã hoàn 30.000 VND, C-014 chỉ ghi thêm 120.000 VND và có đúng một audit `refund_committed` sau khi gọi lại.
+
+### Bằng chứng
+
+- Test riêng Workflow đạt **4/4 ca**. Ma trận public Workflow đạt **62/62 ca**, gồm `resolved`, `denied`, `needs_info`, `escalated`, gọi lại cùng claim và phục hồi sau crash.
+- Commit mã Workflow và test. [c81c2d4](https://github.com/duyanhtran2005/K5-L3A-DAY08-Nhom4Nam-FromWorkflowsToAgents/commit/c81c2d41e8c8b45aadf2b83b3946e35e4fed49f3)
+- Báo cáo cá nhân và các lệnh kiểm thử. [2A202603492_NguyenNhutLinh.md](report/team/2A202603492_NguyenNhutLinh.md)
