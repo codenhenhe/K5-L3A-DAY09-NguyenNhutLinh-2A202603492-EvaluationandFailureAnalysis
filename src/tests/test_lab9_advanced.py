@@ -26,9 +26,10 @@ def test_pass_hat_k(stats, n, c, k, want):
 
 
 def test_pass_k_rejects_bad_args(stats):
-    for args in [(5, 6, 1), (5, 2, 0), (3, 1, 4)]:
-        with pytest.raises(ValueError):
-            stats.pass_at_k(*args)
+    for estimator in (stats.pass_at_k, stats.pass_hat_k):
+        for args in [(5, 6, 1), (5, 2, 0), (3, 1, 4), (5, -1, 1), (5.0, 2, 1)]:
+            with pytest.raises(ValueError):
+                estimator(*args)
 
 
 def _report(rows, metrics, items=4, seeds=(1, 2)):
@@ -61,6 +62,35 @@ def test_integrity_flags_loosened_spec():
     loose["metrics"][0]["threshold"]["min"] = 0.5
     assert gate.integrity_check(base, base, loose, SPEC)
     assert gate.integrity_check(base, base, SPEC, SPEC) == []
+
+
+@pytest.mark.parametrize("trap", ["duplicate", "grader_crash", "relabeled", "forged_summary"])
+def test_integrity_flags_tampering_in_an_otherwise_green_report(trap):
+    from lab9 import gate
+
+    base = _report(copy.deepcopy(ROWS), {"pass_rate": 1.0})
+    pr = copy.deepcopy(base)
+    if trap == "duplicate":
+        pr["rows"][1] = copy.deepcopy(pr["rows"][0])
+    elif trap == "grader_crash":
+        pr["evaluator_failures"].append("evaluator failed on E-000@1")
+    elif trap == "relabeled":
+        pr["rows"][0]["slices"] = []
+    elif trap == "forged_summary":
+        pr["rows"][0]["pass_rate"] = False
+    assert gate.check(pr, base, SPEC)[0] == ["integrity"]
+
+
+def test_ratchet_rejects_removed_slice_and_dropped_bootstrap_requirement():
+    from lab9 import gate
+
+    base = _report(copy.deepcopy(ROWS), {"pass_rate": 1.0})
+    base_spec = copy.deepcopy(SPEC)
+    base_spec["metrics"][0]["threshold"]["no_significant_drop"] = True
+    base_spec["slices"] = [{"name": "denial", "metric": "pass_rate", "min": 0.9, "blocking": True}]
+    problems = gate.integrity_check(base, base, SPEC, base_spec)
+    assert any("metric pass_rate" in problem for problem in problems)
+    assert any("slice denial/pass_rate" in problem for problem in problems)
 
 
 def test_slice_check_blocks_a_slice_below_floor():

@@ -54,3 +54,29 @@ exit 1 — blocked: refund_amount_correct, pass_rate, reply_refund_matches_ledge
 - **Khi gate chặn.** Eval owner tái hiện theo item và seed, kiểm trace và ledger, rồi chạy lại gate sau khi có bản sửa. Đề xuất Nguyễn Nhựt Linh phụ trách đầu mối Lab 9, chờ nhóm xác nhận. [Quy trình trong PRD](PRD_v1.1.md#5-cổng-release)
 - **Giới hạn.** MockLLM và dữ liệu giả lập chỉ cung cấp bằng chứng offline. Với 14 item, CI còn rộng và có thể bỏ sót hồi quy nhỏ hoặc hiếm. Judge dùng CSV replay công khai và chưa được đo trên tập held-out có nhãn mới hay người dùng thật.
 - **Phiên bản tiếp theo.** Tăng `eval_set_version` khi thay đổi tập item hoặc nhãn, chẳng hạn thêm case từ trace. Sinh lại baseline và report so sánh trên cùng phiên bản.
+
+## Eval set v2
+
+Baseline [`E-swarm-20261117-a4cc`](../src/reports/baseline_v2.json) dùng MockLLM, metric spec `2.0` và SHA `a4cc96025e21`. Eval set gồm 14 item v1 và 14 item adversarial, tổng cộng 140 lượt chạy trên 5 seed. Kiểm tra v2 báo 0 lỗi. Các failure mode bị tấn công có ít nhất 3 item trong toàn bộ v2. [Eval set v2](../src/data/eval/eval_set_v2.jsonl) · [Nhãn v2](../src/data/eval/labels_v2.json) · [Metric spec v2](../src/config/metric_spec_v2.yaml)
+
+### A/A và ngưỡng
+
+Cùng shape `swarm` được chạy trên bộ seed `11,22,33,44,55` và `66,77,88,99,110`. Mọi metric được in bởi `lab9.mutation --aa` có Δ `+0.0000`. `pass_rate` là 0,9786, `pass@5` là 1,0000 và `pass^5` là 0,8929 trên cả hai bộ. `pass@k` đo xác suất có ít nhất một lượt đạt trong k lượt lấy mẫu. `pass^k` đo xác suất cả k lượt đều đạt.
+
+Chọn sàn chặn `pass_hat_5 ≥ 0,80`, thấp hơn 9,29 điểm phần trăm so với 0,8929 quan sát trong cả hai lượt A/A. `flaky_regression` đạt pass rate 0,9143, cao hơn sàn trung bình 0,85, nhưng `pass_hat_5` chỉ đạt 0,5714. Trong lượt công khai này, paired CI của pass rate và slice `money_movement` cũng chặn variant. A/A trên MockLLM chỉ đo độ lệch của hai lần replay này. Với LLM thật cần nhiều lần A/A để ước lượng dải nhiễu và chọn sàn bên ngoài dải đó. Một lỗi chỉ xảy ra ở một phần ba số seed có thể lọt qua khi đo bằng năm seed.
+
+### Slice và mutation scorecard
+
+- `money_movement` kiểm các case có khoản hoàn kỳ vọng. Sàn 0,90 chặn `slice_regression` ở 0,8500, so với baseline 1,0000. Trên toàn tập, variant đạt 0,9357 và CI của chênh lệch pass rate là [−0,121; +0,029]. `money_movement` là điều kiện chặn duy nhất của lượt này.
+- `adversarial` kiểm riêng 14 case tấn công, với sàn 0,90 và kiểm CI ghép cặp. Slice này góp phần chặn `seeded_regression`. `reply_refund_matches_ledger` tiếp tục chặn lỗi FM-08 trong v2.
+- Mutation scorecard chặn `seeded_regression`, `slice_regression` và `flaky_regression`, cho qua `fixed` và `honest_refactor`. Baseline `swarm` chạy lại cũng qua gate.
+
+```text
+mutation score 3/3 · false alarms 0
+evaluator_errors_as_nan: exit 1 — blocked: integrity
+dropped_failing_rows: exit 1 — blocked: integrity
+cherry_picked_seeds: exit 1 — blocked: integrity
+loosened_spec: exit 1 — blocked: integrity
+```
+
+Gate đối chiếu cặp item–seed, điểm từng dòng, slice tag và số tổng hợp với các dòng report. Khi có base spec cùng phiên bản, gate chặn việc nới ngưỡng, bỏ metric hoặc slice, bỏ trạng thái blocking và bỏ kiểm hồi quy bằng CI.

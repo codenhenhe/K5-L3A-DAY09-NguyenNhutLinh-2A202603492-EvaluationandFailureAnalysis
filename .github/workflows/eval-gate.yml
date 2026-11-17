@@ -69,7 +69,7 @@ jobs:
     defaults: {run: {working-directory: src}}
     steps:
       - uses: actions/checkout@v7
-        with: {persist-credentials: false}
+        with: {persist-credentials: false, fetch-depth: 0}
       - id: has
         run: "test -f reports/baseline_v2.json && echo v2=1 >> \"$GITHUB_OUTPUT\" || echo skip, no baseline_v2"
       - if: steps.has.outputs.v2
@@ -81,5 +81,23 @@ jobs:
         run: python -m pytest -q -m student -o addopts= -k advanced
       - if: steps.has.outputs.v2
         run: python -m lab9.evalset --v2
-      - if: steps.has.outputs.v2
-        run: python -m lab9.mutation --spec config/metric_spec_v2.yaml --baseline reports/baseline_v2.json
+      - name: Gate the v2 reference and score the public variants
+        if: steps.has.outputs.v2
+        shell: bash
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.sha || 'origin/main' }}
+        run: |
+          base_args=()
+          base_spec="$RUNNER_TEMP/metric_spec_v2.base.yaml"
+          git rev-parse --verify "$BASE_REF^{commit}" >/dev/null
+          if git cat-file -e "$BASE_REF:src/config/metric_spec_v2.yaml" 2>/dev/null; then
+            git show "$BASE_REF:src/config/metric_spec_v2.yaml" > "$base_spec"
+            base_args=(--base-spec "$base_spec")
+          fi
+          spec=config/metric_spec_v2.yaml
+          baseline=reports/baseline_v2.json
+          reference="$RUNNER_TEMP/eval_swarm_v2.json"
+          python -m lab9.eval --shape swarm --spec "$spec" --out "$reference"
+          python -m lab9.ci_check --pr "$reference" --baseline "$baseline" --spec "$spec"
+          python -m lab9.gate --pr "$reference" --baseline "$baseline" --spec "$spec" "${base_args[@]}"
+          python -m lab9.mutation --spec "$spec" --baseline "$baseline" "${base_args[@]}"
