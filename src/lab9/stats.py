@@ -14,26 +14,57 @@ POS = "FAIL"   # the judge's job is to FIND failures, so FAIL is the positive cl
 
 def confusion(human: Sequence[str], judge: Sequence[str]) -> dict[str, int]:
     """tp/fp/fn/tn with FAIL as positive."""
-    # TODO M2
-    raise NotImplementedError
+    counts = {"tp": 0, "fp": 0, "fn": 0, "tn": 0}
+    outcomes = {
+        (POS, POS): "tp",
+        ("PASS", POS): "fp",
+        (POS, "PASS"): "fn",
+        ("PASS", "PASS"): "tn",
+    }
+    for pair in zip(human, judge, strict=True):
+        outcome = outcomes.get(pair)
+        if outcome is None:
+            raise ValueError("labels must be PASS or FAIL")
+        counts[outcome] += 1
+    return counts
 
 
 def precision_recall(human: Sequence[str], judge: Sequence[str]) -> tuple[float, float]:
-    # TODO M2: precision = tp/(tp+fp), recall = tp/(tp+fn); return 0.0 when the denominator is 0
-    raise NotImplementedError
+    counts = confusion(human, judge)
+    true_positives = counts["tp"]
+    predicted_failures = true_positives + counts["fp"]
+    actual_failures = true_positives + counts["fn"]
+    precision = true_positives / predicted_failures if predicted_failures else 0.0
+    recall = true_positives / actual_failures if actual_failures else 0.0
+    return precision, recall
 
 
 def cohen_kappa(human: Sequence[str], judge: Sequence[str]) -> float:
-    """kappa = (p_o - p_e) / (1 - p_e). Raise ValueError when undefined (p_e == 1):
-    a constant judge has no signal and must FAIL calibration, not pass on a technicality."""
-    # TODO M2
-    raise NotImplementedError
+    """Return (observed - expected) / (1 - expected) agreement."""
+    counts = confusion(human, judge)
+    n = sum(counts.values())
+    if not n:
+        raise ValueError("kappa is undefined without labels")
+
+    human_failures = counts["tp"] + counts["fn"]
+    judge_failures = counts["tp"] + counts["fp"]
+    expected_agreement = (
+        human_failures * judge_failures + (n - human_failures) * (n - judge_failures)
+    ) / n**2
+    if expected_agreement == 1.0:
+        raise ValueError("kappa is undefined when chance agreement is 1")
+
+    observed_agreement = (counts["tp"] + counts["tn"]) / n
+    return (observed_agreement - expected_agreement) / (1 - expected_agreement)
 
 
 def rogan_gladen(observed_rate: float, sensitivity: float, specificity: float) -> float:
-    """Correct an observed failure rate for judge error; clip to [0, 1]."""
-    # TODO M2: (p_obs + spec - 1) / (sens + spec - 1)
-    raise NotImplementedError
+    """Correct a failure rate for judge error, clipping defined estimates to [0, 1]."""
+    denominator = sensitivity + specificity - 1
+    if denominator == 0:
+        return float("nan")
+    corrected = (observed_rate + specificity - 1) / denominator
+    return min(max(corrected, 0.0), 1.0)
 
 
 def paired_bootstrap(a: Sequence[float], b: Sequence[float], *, n_resamples: int = 1000,
@@ -41,8 +72,37 @@ def paired_bootstrap(a: Sequence[float], b: Sequence[float], *, n_resamples: int
     """a[i], b[i] = per-item mean over seeds, SAME items, SAME order.
     Return (mean(a)-mean(b), lo, hi) with scipy.stats.bootstrap(paired=True, method="percentile",
     rng=numpy.random.default_rng(rng)). If a == b everywhere return (0.0, 0.0, 0.0)."""
-    # TODO M4
-    raise NotImplementedError
+    import numpy as np
+    from scipy.stats import bootstrap
+
+    pr = np.asarray(a, dtype=float)
+    baseline = np.asarray(b, dtype=float)
+    if pr.ndim != 1 or pr.shape != baseline.shape or pr.size == 0:
+        raise ValueError("paired bootstrap requires equally sized, non-empty vectors")
+    if not (np.isfinite(pr).all() and np.isfinite(baseline).all()):
+        raise ValueError("paired bootstrap requires finite scores")
+
+    if np.array_equal(pr, baseline):
+        return 0.0, 0.0, 0.0
+
+    def mean_difference(current, reference, axis=-1):
+        return np.mean(current - reference, axis=axis)
+
+    delta = float(mean_difference(pr, baseline))
+    if pr.size == 1:
+        return delta, delta, delta
+
+    result = bootstrap(
+        (pr, baseline),
+        mean_difference,
+        paired=True,
+        method="percentile",
+        n_resamples=n_resamples,
+        confidence_level=confidence,
+        rng=np.random.default_rng(rng),
+    )
+    interval = result.confidence_interval
+    return delta, float(interval.low), float(interval.high)
 
 
 def pass_at_k(n: int, c: int, k: int) -> float:

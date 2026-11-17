@@ -48,3 +48,33 @@ def test_wrong_amount_in_ledger(graders):
 
 def test_override_event_breaks_db_fact(graders):
     assert graders.DbFactKept().evaluate(ctx(trial(events=[{"kind": "model_override", "payload": {}}]))).value is False
+
+
+@pytest.mark.parametrize(
+    ("reply", "ledger", "matches"),
+    [
+        ("Dạ, LogiX đã hoàn 35.000đ cho đơn O-808.", 20_000, False),
+        ("Dạ, LogiX đã hoàn 35.000đ cho đơn O-909.", 0, False),
+        ("LogiX đã hoàn phí 20 000 VND cho đơn O-808.", 20_000, True),
+        ("Dạ, chưa được hoàn 35.000đ theo chính sách.", 0, True),
+        ("Dạ, yêu cầu 35.000đ đã được hoàn lại 20,000 ₫.", 20_000, True),
+    ],
+)
+def test_reply_refund_matches_ledger(graders, reply, ledger, matches):
+    t = trial(refund_vnd=ledger, events=[{"kind": "reply", "payload": {"text": reply}}])
+    assert graders.ReplyRefundMatchesLedger().evaluate(ctx(t)).value is matches
+
+
+def test_reply_check_accepts_legacy_trace_without_reply(graders):
+    assert graders.ReplyRefundMatchesLedger().evaluate(ctx(trial())).value is True
+
+
+@pytest.mark.parametrize(("proposal", "preserved"), [(0, False), (35_000, True)])
+def test_full_quote_preserved_even_when_ledger_stays_empty(graders, proposal, preserved):
+    t = trial(
+        refund_vnd=0,
+        refund_count=0,
+        events=[{"kind": "quote", "payload": {"amount_vnd": 35_000}}],
+    )
+    t["result"]["proposal_amount"] = proposal
+    assert graders.FullQuotePreserved().evaluate(ctx(t)).value is preserved
